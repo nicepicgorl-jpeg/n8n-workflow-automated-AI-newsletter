@@ -1,0 +1,891 @@
+{
+  "name": "AI Newsposting",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -784,
+        -368
+      ],
+      "id": "8fc48a68-d564-49b3-acfc-d3638648fc93",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=generative+AI&hl=en-US&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        -368
+      ],
+      "id": "08b4ec80-4232-4837-a558-d6e69f6d2b4e",
+      "name": "GN-GenAI"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNRzFyZWhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        -208
+      ],
+      "id": "10acc50d-581a-4d91-8880-db1626287f1b",
+      "name": "GN-AI"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1910c669-a472-4981-8462-3e83538e0d03",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "2685f8ae-8470-40ff-ab11-b76bc5c6c878",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "7f4610d2-9e07-4f43-ba84-bc9747a7b76e",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "bb23d58c-df87-49f5-83bc-fa98dcfc0a8e",
+              "name": "pubDate",
+              "value": "={{ new Date($json.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        -544
+      ],
+      "id": "ad73415c-2f9e-48a1-b9a4-a57ff2a34133",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e119e12-c475-4692-a8eb-58ad82d47c8e",
+              "leftValue": "={{ $json.pubDate }}",
+              "rightValue": "={{ DateTime.local().toFormat('MMM dd, yyyy')}}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        -544
+      ],
+      "id": "5771691e-76da-464d-a9cb-8f4b13c4c5f1",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea137239-719d-4a2a-b3bb-180193baf9ed",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "fbf8a992-4db8-42b2-bb53-e489f4d853bd",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "d7e2dac1-d32f-4a41-b2b7-2c6c464317b5",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "cb1d6aff-e542-41cc-a1a5-c777cc09db98",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        -544
+      ],
+      "id": "fb165a4f-6b74-440a-8e1a-d965f11fcfec",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1910c669-a472-4981-8462-3e83538e0d03",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "2685f8ae-8470-40ff-ab11-b76bc5c6c878",
+              "name": "content",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "7f4610d2-9e07-4f43-ba84-bc9747a7b76e",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "bb23d58c-df87-49f5-83bc-fa98dcfc0a8e",
+              "name": "pubDate",
+              "value": "={{ new Date($json.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        -368
+      ],
+      "id": "fa20217a-3889-4d75-88b0-3f597ee62e1f",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e119e12-c475-4692-a8eb-58ad82d47c8e",
+              "leftValue": "={{ $json.pubDate }}",
+              "rightValue": "={{ DateTime.local().toFormat('MMM dd, yyyy')}}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        -368
+      ],
+      "id": "c47846c8-1d07-49ad-af8d-9d8f8cf5bfd2",
+      "name": "Filter4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea137239-719d-4a2a-b3bb-180193baf9ed",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "fbf8a992-4db8-42b2-bb53-e489f4d853bd",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "d7e2dac1-d32f-4a41-b2b7-2c6c464317b5",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "cb1d6aff-e542-41cc-a1a5-c777cc09db98",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        -368
+      ],
+      "id": "d7f3e7e6-e288-4f34-a751-c1fc6d61f84d",
+      "name": "Edit Fields10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1910c669-a472-4981-8462-3e83538e0d03",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "2685f8ae-8470-40ff-ab11-b76bc5c6c878",
+              "name": "content",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "7f4610d2-9e07-4f43-ba84-bc9747a7b76e",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "bb23d58c-df87-49f5-83bc-fa98dcfc0a8e",
+              "name": "pubDate",
+              "value": "={{ new Date($json.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        -208
+      ],
+      "id": "1498756a-4745-4bbc-9881-2929f346d1b1",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e119e12-c475-4692-a8eb-58ad82d47c8e",
+              "leftValue": "={{ $json.pubDate }}",
+              "rightValue": "={{ DateTime.local().toFormat('MMM dd, yyyy')}}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        -208
+      ],
+      "id": "ef9d5fad-31cb-45a8-bdd4-8466ec6b0f02",
+      "name": "Filter5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea137239-719d-4a2a-b3bb-180193baf9ed",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "fbf8a992-4db8-42b2-bb53-e489f4d853bd",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "d7e2dac1-d32f-4a41-b2b7-2c6c464317b5",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "cb1d6aff-e542-41cc-a1a5-c777cc09db98",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        -208
+      ],
+      "id": "6f9a031e-77ff-4607-bd66-c98fb2de109c",
+      "name": "Edit Fields11"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        688,
+        -368
+      ],
+      "id": "2e296c20-024d-4783-aacb-e6cd3f1563fc",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b9376df-9a87-4f20-9bf1-369d8ec3235c",
+              "name": "news_update",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "2b7aa45f-9799-490c-b700-8c2459d04420",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        688,
+        -96
+      ],
+      "id": "76e958fa-80c9-41f2-8e13-782051210399",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        640,
+        320
+      ],
+      "id": "3ba076ac-4a7f-45ce-ad79-486f7aaa198e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dvqEioWYlDCNRsLV",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "-1001126995747",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        192
+      ],
+      "id": "54dca054-b997-4717-83c5-788ec92c8b0b",
+      "name": "Telegram",
+      "webhookId": "1deafdbf-5fb8-4d0d-b866-f8d0c0a7a7de",
+      "credentials": {
+        "telegramApi": {
+          "id": "KVCfU2TSfkYyY6ub",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=ai+platforms&hl=en-US&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        -544
+      ],
+      "id": "6629c25a-9b1a-492d-8823-d3930d68fb45",
+      "name": "GN-AIP"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to remove HTML tags and decode common HTML entities if needed.\nfunction stripHtml(html) {\n  if (typeof html !== \"string\") return html;\n  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();\n}\n\nreturn items.map(item => {\n  // Clone the JSON for safety\n  let json = { ...item.json };\n  json.content = stripHtml(json.content);\n  return { json };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        -544
+      ],
+      "id": "e68e3748-909d-4835-b322-559afe947eae",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to remove HTML tags and decode common HTML entities if needed.\nfunction stripHtml(html) {\n  if (typeof html !== \"string\") return html;\n  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();\n}\n\nreturn items.map(item => {\n  // Clone the JSON for safety\n  let json = { ...item.json };\n  json.content = stripHtml(json.content);\n  return { json };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        -368
+      ],
+      "id": "edc5ab25-5f6a-4c07-ab22-5334559898f7",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function to remove HTML tags and decode common HTML entities if needed.\nfunction stripHtml(html) {\n  if (typeof html !== \"string\") return html;\n  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();\n}\n\nreturn items.map(item => {\n  // Clone the JSON for safety\n  let json = { ...item.json };\n  json.content = stripHtml(json.content);\n  return { json };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        -208
+      ],
+      "id": "8677bddc-4e07-4686-9822-88cf6542dd42",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "news_update"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        928,
+        -96
+      ],
+      "id": "32eb37e3-a66f-4b24-90c3-3242dce629fa",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        160
+      ],
+      "id": "de7eea25-51c8-48ca-bd96-7bc151c2583f",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dvqEioWYlDCNRsLV",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the news data. Categorize them into speicific groups.\n\n{{ $json.news_update }}",
+        "options": {
+          "systemMessage": "=You are a smart and precise AI news classifier. Your goal is to categorize incoming AI news into clear and relevant categories. Each news item will include a title, content snippet, and sometimes a source. Assign one of the following categories to each item based on its content and context:\n\nCategories:\nNews — Clear, factual updates or industry developments with actionable insights or major takeaways.\nExample: \"Google unveils Gemma 3 multi-modal AI models - InfoWorld\"\nReview — Analysis or evaluation of AI tools, platforms, or products.\nExample: \"What is HeyGen? Everything we know about the AI video platform - TechRadar\"\nGossip — Speculative content, celebrity involvement, or personality-driven news.\nExample: \"Netflix Games loses its vice-president of generative AI - VentureBeat\"\nInsight — Trend analysis, expert opinions, or emerging patterns in the AI space.\nExample: \"Generative AI rivals racing to the future - The Economic Times\"\nAlert — Critical information, security risks, major breakthroughs, or urgent developments.\nExample: \"Generative AI and deepfakes are fuelling health misinformation. Here's what to look out for - The Conversation\"\n\nInstructions:\nPrioritize assigning News or Insight for content with solid takeaways.\nUse Review only if the content explicitly evaluates a product, platform, or service.\nUse Gossip for speculative, personality-focused, or vague industry buzz.\nUse Alert for critical warnings, security issues, or major breakthroughs requiring immediate attention.\nIf a headline is vague with no clear information or relevance, skip it.\n\nOutput Format:\nCategory\nlist of news"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1104,
+        -96
+      ],
+      "id": "ea90bb0f-7cc1-4328-94ef-a1f02e3953a7",
+      "name": "Classifier📁"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the news data, grouped by category. Use APPROPRIATE MARKDOWN V2 for the output. USE PROPER SPACING and SIZING and EMOJIS. DO NOT RESPOND WITH EXTRA TEXT EXCEPT THE NEWS.\n\n{{ $json.output }}",
+        "options": {
+          "systemMessage": "=You're a savvy, witty AI news editor. Given a list of AI news items (each with a title, content snippet, link, and publication date), craft a short, engaging newsletter digest that delivers real value while keeping things fun and memorable. DO NOT ADD RANDOM THINGS LIKE LINKS or URLs.\n\nNote: It's a DAILY NEWS DIGEST. CUrrent date/time is {{ $now }}\n\nYour Digest Must Include:\nA Snappy Intro: Hook readers with energy and curiosity (e.g., \"AI is heating up faster than my laptop fan!\").\nFor Each Category:\nCategory Heading: Bold and clear, like 🚨 Breaking News or 🛠️ AI Tools & Reviews\nFor Each News Item:\nCatchy Headline + Emoji: Use humor, intrigue, or clever wordplay.\nSharp Summary (1-2 sentences): Clearly highlight what’s new or important + Crack a solid joke or provide a strong, unbiased opinion related to the topic.\nOptional Joke of the Day: Midway or at the end — aim for something original or tied to current AI trends.\nMotivating CTA: Encourage readers to embrace AI and to subscribe our newsletter for daily AI news at koonai.substack.com \nHashtags: Blend tech buzzwords with light-hearted tags (e.g., #AIAdventures, #RoboRumors).\n\nKey Guidelines:\nAvoid vague news unless you can turn it into a great joke or bold opinion.\nCut filler content. If a headline doesn't inspire a good punchline or clear takeaway, skip it.\nUse pop culture references, analogies, or smart puns for added flair.\nKeep the language casual, conversational, and snappy — no dull tech-speak!\n\nExample of a Good Output:\n\nWhat's Buzzing in AI Today: Mar 11, 2025\nHey there, tech trailblazers! 🚀 Ready to dive into today's AI adventures? Let's roll:\n\n💻 Breaking News\n\nMeta's DIY AI Chip: Total Control or Just Control Issues?\nMeta’s rolling out its own AI chip to reduce reliance on Nvidia. Big move — but will it pay off? At this rate, Zuckerberg’s next step might be coding the Matrix.\n\n<more news>\n\n🛡️ Security & Ethics\n\nSteve Harvey’s Digital Bodyguard: Deepfake Defense On Point!\nA new AI platform is protecting Steve Harvey’s likeness from unauthorized deepfakes.Turns out, AI isn’t just here to take your job — it’s here to protect your mustache, too.\n\n<more news>\n\n🎰 Business & Industry\n\nAI Casino Insights: When the House Gets Smarter\nLight & Wonder’s Engage AI now gives casinos real-time insights to boost profits. As if the odds weren’t bad enough — now the machines know your poker face!\n\n<more news>\n\n💾 Tools & Platforms\n\nData Storage Gets Super-Sized \nAI’s New Lunchbox? Pure Storage's FlashBlade//EXA™ promises extreme power for AI’s endless data cravings. AI's appetite for data is getting so big, it might need a fridge too.\n\n<more news>\n\n🌶️ Hot Gossips\n\nUnvale’s AI-Free Social Platform: Creative Haven or Hipster Hype?\n\nUnvale raised $1.8M to build an AI-free social platform for creatives.Finally — a place where your art isn’t just another machine learning experiment.\n\n<more news>\n\n😂 Why did the AI refuse to play poker? Because it couldn’t bluff without spilling the algorithm.\n\nCurious about AI's next big leap? Embrace the tech wave and stay ahead of the curve!🌊Subscribe for daily updates: koonai.substack.com\n\n#AIAdventures #TechBuzz #ArtificialIntelligence #Innovation #AIRevolution"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        688,
+        192
+      ],
+      "id": "91cdf2c1-9ea9-4d22-9298-a938c29dd83c",
+      "name": "Copywriter📝"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "GN-AIP",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GN-GenAI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GN-AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GN-GenAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GN-AI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Filter4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter4": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Filter5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter5": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields10": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields11": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Copywriter📝",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GN-AIP": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Classifier📁",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classifier📁",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classifier📁": {
+      "main": [
+        [
+          {
+            "node": "Copywriter📝",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copywriter📝": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ca458770-c6dd-439b-acff-4867407aa84a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "25fec5c524c2b8e915ff528d2056970a3ef84a66427a602a175c1c0afe2326d4"
+  },
+  "id": "Y64xxdiTYpSO4fwR",
+  "tags": []
+}
